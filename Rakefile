@@ -3,8 +3,8 @@ $:.unshift File.expand_path('../lib', __FILE__)
 require 'rubygems'
 require 'rake'
 require 'rake/testtask'
-require 'rake/rdoctask'
-require 'rake/gempackagetask'
+require 'rdoc/task'
+require 'rubygems/package_task'
 require 'support/gateway_support'
 require 'support/outbound_hosts'
 
