@@ -3,8 +3,8 @@ module ActiveMerchant #:nodoc:
     class NmiGateway < Gateway
       API_VERSION = '3.1'
 
-      self.test_url = 'https://secure.networkmerchants.com/gateway/transact.dll'
-      self.live_url = 'https://secure.networkmerchants.com/gateway/transact.dll'
+      TEST_URL = 'https://secure.networkmerchants.com/gateway/transact.dll'
+      LIVE_URL = 'https://secure.networkmerchants.com/gateway/transact.dll'
 
       class_attribute :duplicate_window
 
@@ -101,7 +101,7 @@ module ActiveMerchant #:nodoc:
       def commit(action, money, parameters)
         parameters[:amount] = amount(money) unless action == 'VOID'
 
-        url = test? ? self.test_url : self.live_url
+        url = test? ? TEST_URL : LIVE_URL
         data = ssl_post(url, post_data(action, parameters))
 
         response          = parse(data)
@@ -157,6 +157,12 @@ module ActiveMerchant #:nodoc:
 
         request = post.merge(parameters).collect { |key, value| "x_#{key}=#{CGI.escape(value.to_s)}" }.join("&")
         request
+      end
+
+      def expdate(creditcard)
+        year = sprintf("%.4i", creditcard.year)
+        month = sprintf("%.2i", creditcard.month)
+        "#{month}#{year[-2..-1]}"
       end
 
       def add_currency_code(post, money, options)
